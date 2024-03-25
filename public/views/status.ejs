@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle Patrimonial - Status</title>
+    <link rel="stylesheet" href="/public/css/status.css">
+</head>
+<body>
+    <section class="logo" style="text-align: center;">
+        <img src="/public/imgs/logo.png" alt="" />
+    </section>
+    <h2 style="text-align: center; font-size: 14px; color: white; font-family: tahoma;">Verificação de patrimônio</h2>
+
+    <section class="wrapper">
+        <!-- Scanner  
+        <div id="reader" style="
+            background-color: rgba(255, 255, 255, 0.445); 
+            backdrop-filter: blur(3px);
+            border-radius: 1rem;" 
+        width="500px"></div> -->
+
+        <!-- Form for the Scanning --> 
+        <div class="qr_area">
+            <input type="text" name="result" id="result" placeholder="Qrcode number" maxlength="18" required />
+            <button type="button" onclick="checkFilled_QR();"><img src="/public/imgs/icons/varredura.png" alt="" width="17px" height="17px"></button>
+        </div>
+
+        <!-- Dados que vao ser puxados da api -->
+        <div class="status">
+            <span id="n-content">Nome: </span>
+            <span id="l-content">Localização: </span>
+            <span id="int-content">Loc Interna: </span>
+            <span id="c-content">Codigo: </span>
+            <span id="s-content">Setor: </span><br><br>
+            <span id="s-content">Em Uso: <img src="/public/imgs/icons/ok.png" alt="" width="20px"></span>
+        </div>
+    </section>
+
+
+    <!-- Library -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script>
+        // Identifica se o DOM esta carregado.
+        function domReady(fn)
+        {
+            (document.readyState === "complete" || document.readyState === "interactive") ?
+            setTimeout(fn, 1) : document.addEventListener("DOMContentLoaded", fn);
+        }
+
+        // Função para inicar o leitor de qr
+        domReady(() => {
+            var qr = document.getElementById("result");
+            var lastResult, countResults = 0;
+
+            // If found qr code
+            function onScanSuccess(decodeText, decodeResult)
+            {
+                if(decodeText !== lastResult)
+                {
+                    ++countResults;
+                    lastResult = decodeText;
+
+                    // Coloca o resultado da busca 
+                    qr.value = decodeText; 
+                    scanner.clear();
+                }
+            }
+
+            // Render camera
+            var scanner = new Html5QrcodeScanner('reader', {fps:30,qrbox:150});
+            scanner.render(onScanSuccess);
+        });
+    </script>
+</body>
+</html>

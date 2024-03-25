@@ -4,60 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle Patrimonial</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/index.css">
 </head>
 <body>
+    <section class="logo" style="text-align: center;">
+        <img src="/logo.png" alt="" />
+    </section>
+    <h2 style="text-align: center; font-size: 14px; color: white; font-family: tahoma;">Sistema de Escaneamento Patrimonial</h2>
 
+    <!-- App buttons -->
+    <section class="navbuttons">
+        <a href="/" title="Cadastre um item aqui." class="item">
+            <div class="button">
+                <img src="/registro.png" alt="" />
+                <span class="name">Cadastro</span>
+            </div>
+        </a><!-- Option -->
 
-    <!-- Scanner -->
-    <div style="display: flex; justify-content: center;">
-        <div id="reader" width="500px"></div>
-    </div>
+        <a href="/status" title="Confira o status de cada tag." class="item">
+            <div class="button">
+                <img src="/status.png" alt="" />
+                <span class="name">Status</span>
+            </div>
+        </a><!-- Option -->
 
-    <form action="">
-        <input type="text" name="result" id="result" required />
-    </form>
-    
+        <a href="/" title="Controle os ativos ja cadastrados." class="item">
+            <div class="button">
+                <img src="/database.png" alt="" />
+                <span class="name">Dados</span>
+            </div>
+        </a><!-- Option -->
 
-
-    <!-- Library -->
-    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-    <script>
-        // Dom is ready?
-        function domReady(fn)
-        {
-            if(document.readyState === "complete" || document.readyState === "interactive")
-            {
-                setTimeout(fn, 1);
-            }
-            else
-            {
-                document.addEventListener("DOMContentLoaded", fn);
-            }
-        }
-
-        domReady(() => {
-            var qr = document.getElementById("result");
-            var lastResult, countResults = 0;
-
-            // If found qr code
-            function onScanSuccess(decodeText, decodeResult)
-            {
-                if(decodeText !== lastResult)
-                {
-                    ++countResults;
-                    lastResult = decodeText;
-
-                    // Put the result inside the input field
-                    qr.value = decodeText; 
-                    scanner.clear();
-                }
-            }
-
-            // Render camera
-            var scanner = new Html5QrcodeScanner('reader',{fps:30,qrbox:250})
-            scanner.render(onScanSuccess);
-        });
-    </script>
+        <a href="/" title="Gerencie o que os usuarios podem fazer." class="item">
+            <div class="button">
+                <img src="/user.png" alt="" />
+                <span class="name">Usuarios</span>
+            </div>
+        </a><!-- Option -->
+    </section>
 </body>
 </html>
