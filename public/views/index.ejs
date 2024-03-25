@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle Patrimonial</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+    <!-- Scanner -->
+    <div style="display: flex; justify-content: center;">
+        <div id="reader" width="500px"></div>
+    </div>
+
+    <form action="">
+        <input type="text" name="result" id="result" required />
+    </form>
+    
+
+
+    <!-- Library -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script>
+        // Dom is ready?
+        function domReady(fn)
+        {
+            if(document.readyState === "complete" || document.readyState === "interactive")
+            {
+                setTimeout(fn, 1);
+            }
+            else
+            {
+                document.addEventListener("DOMContentLoaded", fn);
+            }
+        }
+
+        domReady(() => {
+            var qr = document.getElementById("result");
+            var lastResult, countResults = 0;
+
+            // If found qr code
+            function onScanSuccess(decodeText, decodeResult)
+            {
+                if(decodeText !== lastResult)
+                {
+                    ++countResults;
+                    lastResult = decodeText;
+
+                    // Put the result inside the input field
+                    qr.value = decodeText; 
+                    scanner.clear();
+                }
+            }
+
+            // Render camera
+            var scanner = new Html5QrcodeScanner('reader',{fps:30,qrbox:250})
+            scanner.render(onScanSuccess);
+        });
+    </script>
+</body>
+</html>
