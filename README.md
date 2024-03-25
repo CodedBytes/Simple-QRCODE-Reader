@@ -13,4 +13,4 @@ Estou usando o node.js aqui mas você pode usar qualquer tipo de HTTP Server e c
 
 Estou deixando um certificado que criei, com 5 anos de duração então testem a vontade.
 
-Projeto sob licensa MIT, todas as mudanças são de minha autoria. Para saber mais, por favor refira-se ao arquivo COPYRIGHT dentro do repositorio! 
+Projeto sob licensa MIT, todas as mudanças são de minha autoria. Para saber mais, por favor refira-se ao arquivo LICENSE dentro do repositorio! 
