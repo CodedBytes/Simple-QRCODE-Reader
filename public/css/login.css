@@ -1,0 +1,88 @@
+* {
+    padding: 0;
+     margin: 0;
+     box-sizing: border-box;
+}
+ 
+body {
+     background-color: rgb(22, 25, 116);
+     width: 100vw;
+     height: calc(100vh - 56px);
+}
+
+main section.login-window {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(2px);
+    border-radius: .25rem;
+    width: 350px;
+    padding: 20px 20px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 400px;
+    box-shadow: rgba(0, 0, 0, 0.45) 0px 6px 20px 6px;
+}
+
+main section.login-window > form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+main section.login-window > form > input {
+    height: 34px;
+    margin: 5px 0px;
+    padding: 0px 20px;
+    font-size: 16px;
+    border-radius: .2rem;
+    border: 1px solid rgb(119, 119, 119);
+}
+
+main section.login-window > form > button {
+    margin-top: 20px;
+}
+
+main section.login-window > form > button {
+    padding: 10px;
+    width: 150px;
+    border: 0;
+    border-radius: .2rem;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 3px 2px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    background-color: #fd3441;
+    color: white;
+    transition: 0.2s ease-in-out;
+}
+
+main section.login-window > form > button:hover {
+    background-color: #f34a55;
+    transition: 0.1s ease-in-out;
+}
+
+main section.login-window > form > button:active {
+    background-color: #c90815;
+    transition: 0.1s ease-in-out;
+}
+
+main section.login-window > .obs {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+}
+
+main section.login-window > .obs > span {
+    font-size: 17px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 5px;
+    color: rgb(255, 255, 255);
+}

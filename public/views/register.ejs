@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Controle Patrimonial - Status</title>
+    <title>Controle Patrimonial - Cadastro</title>
     <link rel="stylesheet" href="/status.css">
 </head>
 <body>
+    
     <section class="logo" style="text-align: center;">
         <img src="/logo.png" alt="" />
     </section>
-    <h2 style="text-align: center; font-size: 14px; color: white; font-family: tahoma;">Verificação de patrimônio</h2>
+    <h2 style="text-align: center; font-size: 14px; color: white; font-family: tahoma;">Cadastro de patrimônio</h2>
 
-    <section class="wrapper">
+    <section class="wrapper" id="register">
         <!-- Form for the Scanning --> 
         <div class="qr_area">
             <input type="text" name="result" id="result" placeholder="Qrcode number" maxlength="18" required />
@@ -21,12 +22,38 @@
 
         <!-- Dados que vao ser puxados da api -->
         <div class="status">
-            <span id="n-content">Nome: </span>
-            <span id="l-content">Localização: </span>
-            <span id="int-content">Loc Interna: </span>
-            <span id="c-content">Codigo: </span>
-            <span id="s-content">Departamento: </span><br><br>
-            <span id="u-content">Em Uso: <img src="/wrong.png" alt="" width="20px" style="position: absolute; margin-left: 6px;"></span>
+            <div class="container">
+                <img src="/fakeQR.png" alt="" />
+
+                <div class="infos">
+                    <span class="name">Nome do ativo</span>
+                    <span class="owner">Reponsavel: RH</span>
+                    <span class="user">Cadastrado por: joao</span>
+                    <span class="code">#NA20201001</span>
+                </div>
+
+                <div class="options" style="position: absolute; top: 4px; right: 4px;">
+                    <button type="button"><img src="/apagar.png" alt="" width="20px"></button>
+                    <button type="button"><img src="/editar.png" alt="" width="20px"></button>
+                </div>
+            </div><!-- Criado dinamicamente -->
+
+            
+            <div class="container">
+                <img src="/fakeQR.png" alt="" />
+
+                <div class="infos">
+                    <span class="name">Nome do ativo</span>
+                    <span class="owner">Reponsavel: RH</span>
+                    <span class="user">Cadastrado por: joao</span>
+                    <span class="code">#NA20201002</span>
+                </div>
+
+                <div class="options" style="position: absolute; top: 4px; right: 4px;">
+                    <button type="button"><img src="/apagar.png" alt="" width="20px"></button>
+                    <button type="button"><img src="/editar.png" alt="" width="20px"></button>
+                </div>
+            </div><!-- Criado dinamicamente -->
         </div>
 
         <!-- Voltar -->
@@ -47,7 +74,7 @@
             width="500px"></div>
         </div>
     </div>
-
+    
     <!-- Library -->
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <script>
@@ -81,14 +108,7 @@
                     .then((response) => response.json())
                     .then(data => { 
                         // Colocando informações nos campos
-                        document.getElementById('n-content').innerHTML = 'Nome: ' + data.name;
-                        document.getElementById('l-content').innerHTML = 'Localização: ' + data.localization;
-                        document.getElementById('int-content').innerHTML = 'Loc Interna: ' + data.loc_internal;
-                        document.getElementById('c-content').innerHTML = 'Codigo: ' + data.code;
-                        document.getElementById('s-content').innerHTML = 'Departamento: ' + data.depart;
                         
-                        (data.being_used) ? document.getElementById('u-content').innerHTML = `Em Uso: <img src="/ok.png" alt="" width="20px" style="position: absolute; margin-left: 6px;">`
-                        : document.getElementById('u-content').innerHTML = `Em Uso: <img src="/wrong.png" alt="" width="20px" style="position: absolute; margin-left: 6px;">`
                     }).catch((error) => alert(error))
             }
             else
@@ -133,16 +153,7 @@
                                 fetch(`/restapi_v1/assets/internal/${qr.value}`, options)
                                     .then((response) => response.json())
                                     .then(data => { 
-                                        // Colocando informações nos campos
-                                        document.getElementById('n-content').innerHTML = 'Nome: ' + data.name;
-                                        document.getElementById('l-content').innerHTML = 'Localização: ' + data.localization;
-                                        document.getElementById('int-content').innerHTML = 'Loc Interna: ' + data.loc_internal;
-                                        document.getElementById('c-content').innerHTML = 'Codigo: ' + data.code;
-                                        document.getElementById('s-content').innerHTML = 'Departamento: ' + data.depart;
                                         
-                                        (data.being_used) ? document.getElementById('u-content').innerHTML = `Em Uso: <img src="/ok.png" alt="" width="20px" style="position: absolute; margin-left: 6px;">`
-                                        : document.getElementById('u-content').innerHTML = `Em Uso: <img src="/wrong.png" alt="" width="20px" style="position: absolute; margin-left: 6px;">`
-
                                         // Fechando a janela
                                         closeWindow(1); 
                                     }).catch((error) => console.log(error))

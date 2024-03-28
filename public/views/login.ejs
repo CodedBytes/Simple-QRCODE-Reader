@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle Patrimonial - Login</title>
+    <link rel="stylesheet" href="/login.css">
+</head>
+<body>
+    <main>
+        <!-- Logo -->
+        <section class="logo" style="text-align: center;">
+            <img src="/logo.png" alt="" />
+        </section>
+
+        <!-- Window -->
+        <section class="login-window">
+            <h1 style="
+                color: white; 
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                text-align: center;
+                margin-bottom: 30px;
+            ">Login</h1>
+
+            <form action="/restapi_v1/auth" method="POST">
+                <input type="text" name="user" id="user" required maxlength="16" placeholder="Nome de usuario" />
+                <input type="password" name="pass" id="pass" required maxlength="18" placeholder="Senha"/>
+                <button type="submit" class="login-btn">Entrar</button>
+            </form>
+
+            <!-- Obs area -->
+            <div class="obs">
+                <span>O cadastro no sistema é feito de maneira interna.</span>
+                <span>Entre em contato com o departamento de T.I para a liberação do seu acesso.</span>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
