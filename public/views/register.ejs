@@ -21,40 +21,7 @@
         </div>
 
         <!-- Dados que vao ser puxados da api -->
-        <div class="status">
-            <div class="container">
-                <img src="/fakeQR.png" alt="" />
-
-                <div class="infos">
-                    <span class="name">Nome do ativo</span>
-                    <span class="owner">Reponsavel: RH</span>
-                    <span class="user">Cadastrado por: joao</span>
-                    <span class="code">#NA20201001</span>
-                </div>
-
-                <div class="options" style="position: absolute; top: 4px; right: 4px;">
-                    <button type="button"><img src="/apagar.png" alt="" width="20px"></button>
-                    <button type="button"><img src="/editar.png" alt="" width="20px"></button>
-                </div>
-            </div><!-- Criado dinamicamente -->
-
-            
-            <div class="container">
-                <img src="/fakeQR.png" alt="" />
-
-                <div class="infos">
-                    <span class="name">Nome do ativo</span>
-                    <span class="owner">Reponsavel: RH</span>
-                    <span class="user">Cadastrado por: joao</span>
-                    <span class="code">#NA20201002</span>
-                </div>
-
-                <div class="options" style="position: absolute; top: 4px; right: 4px;">
-                    <button type="button"><img src="/apagar.png" alt="" width="20px"></button>
-                    <button type="button"><img src="/editar.png" alt="" width="20px"></button>
-                </div>
-            </div><!-- Criado dinamicamente -->
-        </div>
+        <div class="status" id="assets-listing"> </div>
 
         <!-- Voltar -->
         <button type="button" class="go-back" onclick="window.location.href='/'">Voltar</button>
@@ -74,9 +41,26 @@
             width="500px"></div>
         </div>
     </div>
+
+    <div class="draggable-window" id="window-reg">
+        <div class="window-header" id="wind_header">
+            <span>Registrar Ativo</span>
+            <button type="button" onclick="closeWindow(2);" class="close" title="Fechar">X</button>
+        </div>
+        <div class="window-content">
+            <span>Este ativo não esta cadastrado, mas você pode cadastrar este atigo agora atraves deste formulario.</span>
+
+            <form action="" style="display: flex; flex-direction: column; margin-top: 20px; ">
+                <input type="text" name="reg_name" id="reg_name" required maxlength="18" placeholder="Nome do ativo" />
+                <input type="text" name="reg_codigo" id="reg_codigo" required maxlength="18" placeholder="Codigo do ativo" disabled />
+                <button type="submit">Enviar</button>
+            </form>
+        </div>
+    </div>
     
     <!-- Library -->
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="/api-calls.js"></script>
     <script>
         // Identifica se o DOM esta carregado.
         function domReady(fn)
@@ -84,6 +68,17 @@
             (document.readyState === "complete" || document.readyState === "interactive") ?
             setTimeout(fn, 1) : document.addEventListener("DOMContentLoaded", fn);
         }
+
+        // Apos o DOM estar carregado, puxa todos os assets
+        domReady(() => {
+            // OAUTH 2.0 - Basic -> Puxando todos os assets
+            const opt_auth = {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json', },
+                };
+                fetch(`/restapi_v1/auth/token`, opt_auth).then((response) => response.json())
+                    .then(data => { listAvailableInternalAssets(data.access_token); }).catch((error) => alert(error))
+        })
 
         //  Guardando camera
         let camera;
@@ -94,22 +89,16 @@
             // Field onde esta o numero do qur para verificação interna
             if (document.getElementById('result').value !== "")
             {
-                // Verifica o codigo mandando um solicitação HTTP para a API.
-                const opt = {
+                // OAUTH 2.0 - Basic -> Verificando disponibilidade para cadastro manualmente.
+                const opt_auth = {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json', },
                     /*body: JSON.stringify({
-                            qr: document.getElementById('result').value
-                        })*/
+                        qr: document.getElementById('result').value
+                    })*/
                 };
-
-                // Pede para a API fornecer dados sobre as tags internas
-                fetch(`/restapi_v1/assets/internal/${document.getElementById("result").value}`, opt)
-                    .then((response) => response.json())
-                    .then(data => { 
-                        // Colocando informações nos campos
-                        
-                    }).catch((error) => alert(error))
+                fetch(`/restapi_v1/auth/token`, opt_auth).then((response) => response.json())
+                    .then(data => { checkIsAvailable(data.access_token, document.getElementById("result").value); }).catch((error) => alert(error))
             }
             else
             {
@@ -142,21 +131,13 @@
                                 // Coloca o resultado da busca 
                                 qr.value = decodeText; 
                                 scanner.clear();
-
-                                // Verifica o codigo mandando um solicitação HTTP para a API.
-                                const options = {
+                                // OAUTH 2.0 - Basic -> Verificando disponibilidade para cadastro manualmente.
+                                const opt_auth = {
                                     method: 'GET',
-                                    headers: { 'Content-Type': 'application/json', }
+                                    headers: { 'Content-Type': 'application/json', },
                                 };
-
-                                // Pede para a API fornecer dados sobre as tags internas
-                                fetch(`/restapi_v1/assets/internal/${qr.value}`, options)
-                                    .then((response) => response.json())
-                                    .then(data => { 
-                                        
-                                        // Fechando a janela
-                                        closeWindow(1); 
-                                    }).catch((error) => console.log(error))
+                                fetch(`/restapi_v1/auth/token`, opt_auth).then((response) => response.json())
+                                    .then(data => { checkIsAvailable(data.access_token, document.getElementById("result").value); closeWindow(1); }).catch((error) => alert(error))
                             }
                         }
 
@@ -184,6 +165,22 @@
 
                     // Close login window
                     let logPopup = document.getElementById('window-qr');
+                    logPopup.style.animation="closeAnimation 0.2s";
+                    let backPopup = document.getElementById('background');
+                    backPopup.style.animation="closeBackground 0.2s";
+                    
+                    // After the popup is closed, remove the element from the DOM.
+                    delay (150).then (() => { 
+                        logPopup.style.display = "none";
+                        backPopup.style.display = "none";
+                    });
+                    break;
+                }
+
+                case 2:
+                {
+                    // Close login window
+                    let logPopup = document.getElementById('window-reg');
                     logPopup.style.animation="closeAnimation 0.2s";
                     let backPopup = document.getElementById('background');
                     backPopup.style.animation="closeBackground 0.2s";

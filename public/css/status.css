@@ -154,7 +154,7 @@ section.wrapper > .status > span {
     margin-bottom: 10px;
     font-size: 18px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
     font-weight: 600;
 }
 
@@ -168,8 +168,8 @@ section.wrapper > .qr_area > input {
     width: 230px;
     border-radius: .3rem;
     border: 1px solid grey;
-    padding-left: 10px;
-    padding-right: 32px;
+    padding-left: 33px;
+    padding-right: 10px;
     font-size: 16px;
     box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 7px 1px;
 }
@@ -184,7 +184,6 @@ section.wrapper > .qr_area > button {
     border-radius: .3rem;
     background-color: rgb(233, 233, 233);
     position: absolute;
-    right: 66px;
     cursor: pointer;
     transition: 0.1s ease-in-out;
 }
@@ -206,10 +205,11 @@ section.wrapper > .go-back {
     color: black;
     font-weight: 700;
     border: 0px;
-    border-radius: .5rem;
+    border-radius: .2rem;
     background-color: #fd3441;
-    box-shadow: rgba(0, 0, 0, 0.7) 0px 2px 7px 1px;
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 2px 7px 1px;
     color: #ffffff;
+    cursor: pointer;
 }
 
 .window-background {
@@ -247,7 +247,7 @@ section.wrapper > .status > .container > .infos {
 }
 
 section.wrapper > .status > .container > .infos > .name {
-    font-size: 19px;
+    font-size: 15px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: 600;
 } 

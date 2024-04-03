@@ -19,7 +19,7 @@
             <button type="button" onclick="verifyQR();"><img src="/varredura.png" alt="" width="17px" height="17px"></button>
         </div>
 
-        <!-- Dados que vao ser puxados da api -->
+        <!-- Dados que vão ser puxados da api -->
         <div class="status">
             <span id="n-content">Nome: </span>
             <span id="l-content">Localização: </span>
@@ -50,6 +50,7 @@
 
     <!-- Library -->
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="/api-calls.js"></script>
     <script>
         // Identifica se o DOM esta carregado.
         function domReady(fn)
@@ -58,38 +59,25 @@
             setTimeout(fn, 1) : document.addEventListener("DOMContentLoaded", fn);
         }
 
-        //  Guardando camera
+        //  Variavel para guardar a camera
         let camera;
 
         // Função para inicar o leitor de qr
         function verifyQR()
         {
-            // Field onde esta o numero do qur para verificação interna
+            // Campo onde esta o numero do qr para verificação interna
             if (document.getElementById('result').value !== "")
             {
-                // Verifica o codigo mandando um solicitação HTTP para a API.
-                const opt = {
+                // OAUTH 2.0 - Basic -> Puxando os dados digitados manualmente.
+                const opt_auth = {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json', },
                     /*body: JSON.stringify({
-                            qr: document.getElementById('result').value
-                        })*/
+                        qr: document.getElementById('result').value
+                    })*/
                 };
-
-                // Pede para a API fornecer dados sobre as tags internas
-                fetch(`/restapi_v1/assets/internal/${document.getElementById("result").value}`, opt)
-                    .then((response) => response.json())
-                    .then(data => { 
-                        // Colocando informações nos campos
-                        document.getElementById('n-content').innerHTML = 'Nome: ' + data.name;
-                        document.getElementById('l-content').innerHTML = 'Localização: ' + data.localization;
-                        document.getElementById('int-content').innerHTML = 'Loc Interna: ' + data.loc_internal;
-                        document.getElementById('c-content').innerHTML = 'Codigo: ' + data.code;
-                        document.getElementById('s-content').innerHTML = 'Departamento: ' + data.depart;
-                        
-                        (data.being_used) ? document.getElementById('u-content').innerHTML = `Em Uso: <img src="/ok.png" alt="" width="20px" style="position: absolute; margin-left: 6px;">`
-                        : document.getElementById('u-content').innerHTML = `Em Uso: <img src="/wrong.png" alt="" width="20px" style="position: absolute; margin-left: 6px;">`
-                    }).catch((error) => alert(error))
+                fetch(`/restapi_v1/auth/token`, opt_auth).then((response) => response.json())
+                    .then(data => { retrieveInternalAssetInfo(data.access_token, document.getElementById("result").value); }).catch((error) => alert(error))
             }
             else
             {
@@ -123,45 +111,26 @@
                                 qr.value = decodeText; 
                                 scanner.clear();
 
-                                // Verifica o codigo mandando um solicitação HTTP para a API.
-                                const options = {
+                                // OAUTH 2.0 - Basic -> Puxando os dados pegos pelo qr.
+                                const opt_auth = {
                                     method: 'GET',
-                                    headers: { 'Content-Type': 'application/json', }
+                                    headers: { 'Content-Type': 'application/json', },
                                 };
-
-                                // Pede para a API fornecer dados sobre as tags internas
-                                fetch(`/restapi_v1/assets/internal/${qr.value}`, options)
-                                    .then((response) => response.json())
-                                    .then(data => { 
-                                        // Colocando informações nos campos
-                                        document.getElementById('n-content').innerHTML = 'Nome: ' + data.name;
-                                        document.getElementById('l-content').innerHTML = 'Localização: ' + data.localization;
-                                        document.getElementById('int-content').innerHTML = 'Loc Interna: ' + data.loc_internal;
-                                        document.getElementById('c-content').innerHTML = 'Codigo: ' + data.code;
-                                        document.getElementById('s-content').innerHTML = 'Departamento: ' + data.depart;
-                                        
-                                        (data.being_used) ? document.getElementById('u-content').innerHTML = `Em Uso: <img src="/ok.png" alt="" width="20px" style="position: absolute; margin-left: 6px;">`
-                                        : document.getElementById('u-content').innerHTML = `Em Uso: <img src="/wrong.png" alt="" width="20px" style="position: absolute; margin-left: 6px;">`
-
-                                        // Fechando a janela
-                                        closeWindow(1); 
-                                    }).catch((error) => console.log(error))
+                                fetch(`/restapi_v1/auth/token`, opt_auth).then((response) => response.json())
+                                    .then(data => { retrieveInternalAssetInfo(data.access_token, qr.value); closeWindow(1); }).catch((error) => alert(error))
                             }
                         }
 
                         // Render camera
                         let scanner = new Html5QrcodeScanner('reader', { fps:30, qrbox:150 });
-                        camera = scanner;
+                        camera = scanner;// Guarda a camera.
                         scanner.render(onScanSuccess);
                     });
                 });
             }
-
         }
 
         // Handler para fechar janelas
-
-
         function closeWindow(_id)
         {
             switch(_id)
@@ -171,17 +140,14 @@
                     // Mata o scanner de qr para nao usar nenhum processo a mais do celular.
                     camera.clear();
 
-                    // Close login window
+                    // Close login window.
                     let logPopup = document.getElementById('window-qr');
                     logPopup.style.animation="closeAnimation 0.2s";
                     let backPopup = document.getElementById('background');
                     backPopup.style.animation="closeBackground 0.2s";
                     
                     // After the popup is closed, remove the element from the DOM.
-                    delay (150).then (() => { 
-                        logPopup.style.display = "none";
-                        backPopup.style.display = "none";
-                    });
+                    delay (150).then (() => { logPopup.style.display = "none"; backPopup.style.display = "none"; });
                     break;
                 }
             }
